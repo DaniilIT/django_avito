@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "django-avito"
+version = "0.1.0"
+description = ""
+authors = ["Daniil_Manuilov <manuilovdaniil@yandex.ru>"]
+readme = "README.md"
+packages = [{include = "django_avito"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^4.1.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
