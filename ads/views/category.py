@@ -45,13 +45,13 @@ class CatCreateView(CreateView):
     def post(self, request, *args, **kwargs):
         category_data = json.loads(request.body)
 
-        category = Category.objects.create(
+        new_category = Category.objects.create(
             name=category_data.get('name')
         )
 
         return JsonResponse({
-            'id': category.id,
-            'name': category.name
+            'id': new_category.id,
+            'name': new_category.name
         }, json_dumps_params={"ensure_ascii": False}, status=302)
 
 
