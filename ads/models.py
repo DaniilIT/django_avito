@@ -57,7 +57,7 @@ class Ad(models.Model):
     is_published = models.BooleanField(default=False)
     image = models.ImageField(upload_to='ads/', null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)  # blank
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Объявление'
