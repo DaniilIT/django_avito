@@ -6,7 +6,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView
 
-from ads.models import Ads, Category
+from ads.models import Ad, Category
 
 
 def root(request):
@@ -54,7 +54,7 @@ class CatDetailView(DetailView):
 @method_decorator(csrf_exempt, name='dispatch')
 class AdView(View):
     def get(self, request):
-        ads = Ads.objects.all()
+        ads = Ad.objects.all()
 
         if is_published := request.GET.get("is_published"):
             is_published = True if is_published == 1 else False
@@ -78,7 +78,7 @@ class AdView(View):
     def post(self, request):
         ad_data = json.loads(request.body)
 
-        ad = Ads.object.create(id=ad_data.get('id'),
+        ad = Ad.object.create(id=ad_data.get('id'),
                                name=ad_data.get('name'),
                                author=ad_data.get('author'),
                                price=ad_data.get('price'),
@@ -99,7 +99,7 @@ class AdView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AdDetailView(DetailView):
-    model = Ads
+    model = Ad
 
     def get(self, request, *args, **kwargs):
         try:

@@ -51,3 +51,14 @@ python utils.py
 ## Цель проекта
 
 Код написан в образовательных целях. [skypro]().
+
+
+docker run -p 5432:5432 --name django_avito_postgres -e POSTGRES_PASSWORD=postgres -d postgres
+python ./tools/convert.py
+или загрузить csv в DB напрямую, только поменять в ad.csv колунку is_published TRUE FALSE 1 0
+
+./manage.py loaddata ./datasets/location.json
+./manage.py loaddata ./datasets/user.json
+./manage.py loaddata ./datasets/user_location.json
+./manage.py loaddata ./datasets/category.json
+./manage.py loaddata ./datasets/ad.json
