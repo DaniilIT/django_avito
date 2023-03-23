@@ -1,4 +1,4 @@
-from .ad import AdListView, AdDetailView, AdCreateView, AdUpdateView, AdDeleteView
+from .ad import AdListView, AdDetailView, AdCreateView, AdUpdateView, AdDeleteView, AdLoadImageView
 from .category import CatListView, CatDetailView, CatCreateView, CatUpdateView, CatDeleteView
 from .service import root
 
@@ -18,4 +18,5 @@ __all__.extend([
     'AdCreateView',
     'AdUpdateView',
     'AdDeleteView',
+    'AdLoadImageView',
 ])

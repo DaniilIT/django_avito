@@ -149,3 +149,26 @@ class AdDeleteView(DeleteView):
         super().delete(request, *args, **kwargs)
         return JsonResponse({}, status=204)
         # return redirect(self.get_success_url())
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AdLoadImageView(UpdateView):
+    model = Ad
+    fields = ('image',)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        self.object.image = request.FILES.get('image')
+        self.object.save()
+
+        return JsonResponse({
+            'id': self.object.id,
+            "name": self.object.name,
+            "price": self.object.price,
+            "description": self.object.description,
+            "is_published": self.object.is_published,
+            "image": self.object.image.url if self.object.image else None,
+            "author": self.object.author.username,
+            "category": self.object.category.name if self.object.category else None,
+        }, json_dumps_params={"ensure_ascii": False}, status=302)
