@@ -18,5 +18,4 @@ ENV/
 
 # project
 *.json
-*.db
-*.sqlite3
+media/

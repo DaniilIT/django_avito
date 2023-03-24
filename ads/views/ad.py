@@ -28,7 +28,7 @@ class AdListView(ListView):
         self.object_list = self.object_list.order_by('-price')
 
         paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
-        page_number = request.GET.get('page')  # , 0
+        page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
         ads = [{
