@@ -1,31 +1,34 @@
 from .ad import AdListView, AdDetailView, AdCreateView, AdUpdateView, AdDeleteView, AdLoadImageView
 from .category import CatListView, CatDetailView, CatCreateView, CatUpdateView, CatDeleteView
-from .user import UserListView, UserDetailView, UserCreateView, UserUpdateView, UserDeleteView
+from .location import LocationViewSet
 from .service import root
+from .user import UserListView, UserDetailView, UserCreateView, UserUpdateView, UserDeleteView
 
 __all__ = ['root']
 
-__all__.extend([
+__all__ += [
     'CatListView',
     'CatDetailView',
     'CatCreateView',
     'CatUpdateView',
     'CatDeleteView',
-])
+]
 
-__all__.extend([
+__all__ += [
     'AdListView',
     'AdDetailView',
     'AdCreateView',
     'AdUpdateView',
     'AdDeleteView',
     'AdLoadImageView',
-])
+]
 
-__all__.extend([
+__all__ += [
     'UserListView',
     'UserDetailView',
     'UserCreateView',
     'UserUpdateView',
     'UserDeleteView',
-])
+]
+
+__all__ += ['LocationViewSet']

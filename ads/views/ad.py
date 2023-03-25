@@ -1,55 +1,87 @@
 import json
 
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from rest_framework.generics import ListAPIView
 
 from ads.models import Ad, User, Category
+from ads.serializers import AdSerializer
 from avito import settings
 
 
-class AdListView(ListView):
-    model = Ad
-
-    # queryset = Ad.object.all()
+class AdListView(ListAPIView):
+    queryset = Ad.objects.all()
+    serializer_class = AdSerializer
 
     def get(self, request, *args, **kwargs):
-        super().get(request, *args, **kwargs)
+        if categories := request.GET.getlist('cat'):
+            self.queryset = self.queryset.filter(
+                category__id__in=categories
+            )
+        if text := request.GET.get('text'):
+            self.queryset = self.queryset.filter(
+                name__icontains=text
+            )
+        if location := request.GET.get('location'):
+            self.queryset = self.queryset.filter(
+                author__location__name__icontains=location
+            )
+        if price_from := request.GET.get('price_from'):
+            self.queryset = self.queryset.filter(
+                price__gte=int(price_from)
+            )
+        if price_to := request.GET.get('price_to'):
+            self.queryset = self.queryset.filter(
+                price__lte=int(price_to)
+            )
 
-        if is_published := request.GET.get("is_published"):
-            is_published = True if is_published == 'true' else False
-            self.object_list = self.object_list.filter(is_published=is_published)
 
-        self.object_list = self.object_list.select_related('author').select_related('category')
+        return super().get(request, *args, **kwargs)
 
-        self.object_list = self.object_list.order_by('-price')
-
-        paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        ads = [{
-            'id': ad.id,
-            "name": ad.name,
-            "price": ad.price,
-            "description": ad.description,
-            "is_published": ad.is_published,
-            "image": ad.image.url if ad.image else None,
-            "author_id": ad.author_id,
-            "author": ad.author.username,
-            "category_id": ad.category_id,
-            "category": ad.category.name if ad.category else None,
-        } for ad in page_obj]
-
-        return JsonResponse(data={
-            'items': ads,
-            'per_page': settings.TOTAL_ON_PAGE,
-            'num_pages': paginator.num_pages,
-            'total': paginator.count  # количество записей
-        }, json_dumps_params={"ensure_ascii": False})
+# class AdListView(ListView):
+#     model = Ad
+#
+#     # queryset = Ad.object.all()
+#
+#     def get(self, request, *args, **kwargs):
+#         super().get(request, *args, **kwargs)
+#
+#         if is_published := request.GET.get("is_published"):
+#             is_published = True if is_published == 'true' else False
+#             self.object_list = self.object_list.filter(is_published=is_published)
+#
+#         self.object_list = self.object_list.select_related('author').select_related('category')
+#
+#         self.object_list = self.object_list.order_by('-price')
+#
+#         paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
+#         page_number = request.GET.get('page')
+#         page_obj = paginator.get_page(page_number)
+#
+#         ads = [{
+#             'id': ad.id,
+#             "name": ad.name,
+#             "price": ad.price,
+#             "description": ad.description,
+#             "is_published": ad.is_published,
+#             "image": ad.image.url if ad.image else None,
+#             "author_id": ad.author_id,
+#             "author": ad.author.username,
+#             "category_id": ad.category_id,
+#             "category": ad.category.name if ad.category else None,
+#         } for ad in page_obj]
+#
+#         return JsonResponse(data={
+#             'items': ads,
+#             'per_page': settings.TOTAL_ON_PAGE,
+#             'num_pages': paginator.num_pages,
+#             'total': paginator.count  # количество записей
+#         }, json_dumps_params={"ensure_ascii": False})
 
 
 class AdDetailView(DetailView):

@@ -65,3 +65,11 @@ class Ad(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def author_username(self):
+        return self.author.username
+
+    @property
+    def category_name(self):
+        return self.category.name if self.category else None
